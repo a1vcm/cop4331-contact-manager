@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+    <head>
+        <title>COP4331 Small Project</title>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <!-- Bootstrap CSS v5.3.8 -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+            crossorigin="anonymous"
+        />
+        <link rel="stylesheet" href="css/styles.css" type="text/css">
+    </head>
+
+    <body>
+        <div class ="p-5 bg-primary text-white text-center">
+                <h1>MagCon</h1>
+                <p>Magic in Every Connection</p>
+        </div>
+
+        <!-- Sign Up Form -->
+        <div class = "d-flex justify-content-center align-items-center vh-100">
+            <main class="border rounded p-5 shadow" style="width: 100%; max-width: 480px;">
+                <form action="https://api.example.com/users" method="POST">
+                    
+                    <!--Name-->
+                    <div class="mb-1">
+                        <label class="form-label">Name</label>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="firstName" class="form-label"></label>
+                                <input type="text" class="form-control" id="firstName" placeholder="Enter First Name" name="firstName" required>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="lastName" class="form-label"></label>
+                                <input type="text" class="form-control" id="lastName" placeholder="Enter Last Name" name="lastName" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!--Email & Phone-->
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" placeholder="Enter Email" name="email" required>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="phone" placeholder="Enter Phone Number" name="phone" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Username & Password-->
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" placeholder="Enter Username" name="username" required>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" placeholder="Enter Password" name="password" required>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Create Account</button>
+                </form>
+            
+                <!--Transition to Sign In Form-->
+                <div class="text-center mt-3">
+                    Already Have An Account?<a href="signin.html"> Sign In!</a>  
+                </div>
+            </main> 
+        </div>
+       
+        <footer>
+            © 2026 MagCon. All rights reserved.
+        </footer>
+        
+        <!-- Bootstrap JavaScript Bundle (includes Popper) -->
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+            crossorigin="anonymous"
+        ></script>
+    </body>
+</html>

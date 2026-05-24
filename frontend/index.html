@@ -55,7 +55,45 @@
                 </div>
             </div>
         </header>
-        <main></main>
+        <main class="container">
+            <!-- Add a Contact Section -->
+            <section class="card">
+                <h2> Add a Contact</h2>
+                <form method="POST" class="form-grid">
+                    <input type="text" name="firstName" placeholder="First Name" required>
+                    <input type="text" name="lastName" placeholder="Last Name" required>
+                    <input type="email"name="email" placeholder="Email" required>
+                    <input type="tel" name="phoneNumber" placeholder="Phone Number" required>
+                    <button type="submit" class="btn btn-primary">Add Contact</button>
+                </form> 
+            </section>
+
+            <!-- Contact List Section -->
+             <section class="card mt-4">
+                <h2>Contact List</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">First Name</th>
+                            <th scope="col">Last Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Phone Number</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Example contact entry -->
+                        <tr>
+                            <td>John</td>
+                            <td>Doe</td>
+                            <td>john.doe@example.com</td>
+                            <td>(123) 456-7890</td>
+                            <td><a href="edit-contact.html">Edit</a> | <a href="delete-contact.html">Delete</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+
         <footer>
             <!-- place footer here -->
         </footer>

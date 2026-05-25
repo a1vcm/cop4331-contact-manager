@@ -21,5 +21,23 @@ function returnWithInfo($info)
 {
     sendResultInfoAsJson($info);
 }
+ 
+function returnWithErrorRegistration( $err )
+{
+	$retValue = '{"id":0,"error":"' . $err . '"}'; // return id:0, safety measure
+	sendResultInfoAsJson( $retValue );
+}
+ 
+function returnWithInfoRegistration( $id )
+{
+	$retValue = '{"id":' . $id . ',"error":""}';
+	sendResultInfoAsJson( $retValue );
+}
+
+function returnWithLoginInfo( $firstName, $lastName, $id )
+{
+	$retValue = '{"id":' . $id . ',"firstName":"' . $firstName . '","lastName":"' . $lastName . '","error":""}';
+	sendResultInfoAsJson( $retValue );
+}
 
 ?>

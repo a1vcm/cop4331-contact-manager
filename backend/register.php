@@ -13,7 +13,7 @@
 	{
 		// Check if login already exists
 		$stmt = $conn->prepare("SELECT ID FROM Users WHERE Login=?");
-		$stmt->bind_param("s", $inData["login"]);
+		$stmt->bind_param("s", $inData["Login"]);
 		$stmt->execute();
 		$result = $stmt->get_result();
  
@@ -23,9 +23,9 @@
 		}
 		else
 		{
-			// Insert new user
-			$stmt = $conn->prepare("INSERT INTO Users (firstName, lastName, login, password, phone, email) VALUES (?,?,?,?,?,?)");
-			$stmt->bind_param("ssssss", $inData["firstName"], $inData["lastName"], $inData["login"], $inData["password"], $inData["phone"], $inData["email"]);
+			// Insert new user, ID should be created in sql via incrementing
+			$stmt = $conn->prepare("INSERT INTO Users (firstName, lastName, 'Login', 'Password') VALUES (?,?,?,?)");
+			$stmt->bind_param("ssss", $inData["FirstName"], $inData["LastName"], $inData["Login"], $inData["Password"]);
 			$stmt->execute();
  
 			if( $stmt->affected_rows > 0 )
@@ -34,14 +34,14 @@
 			}
 			else
 			{
-				returnWithErrorRegistration("Registration failed");
+				returnWithError("Registration failed");
 			}
 		}
  
 		$stmt->close();
 		$conn->close();
 	}
- 
+    
 ?>
 
 

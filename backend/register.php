@@ -30,7 +30,7 @@
  
 			if( $stmt->affected_rows > 0 )
 			{
-				returnWithInfoRegistration( $stmt->insert_id );
+				returnWithRegistrationInfo( $stmt->insert_id );
 			}
 			else
 			{

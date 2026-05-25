@@ -28,7 +28,7 @@ function returnWithErrorRegistration( $err )
 	sendResultInfoAsJson( $retValue );
 }
  
-function returnWithInfoRegistration( $id )
+function returnWithRegistrationInfo( $id )
 {
 	$retValue = '{"id":' . $id . ',"error":""}';
 	sendResultInfoAsJson( $retValue );

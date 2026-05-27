@@ -1,162 +1,547 @@
 <!doctype html>
 <html lang="en" data-bs-theme="dark">
-    <head>
-        <title>MagCon</title>
-        <!-- Required meta tags -->
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+    <title>ContactLein – Contact Manager</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="ContactLein personal contact manager – store and manage your contacts securely." />
+    <link rel="icon" href="images/favicon.ico" />
 
-        <!-- Bootstrap CSS v5.3.8 -->
-        <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-            crossorigin="anonymous"
-        />
-    </head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+          crossorigin="anonymous"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
 
-    <body>
-        <header>
-            <!--Navigation Bar-->
-            <nav class="navbar bg-dark px-3">
-                <div class="container-fluid position-relative" align-items-center">
-                    
-                    <!--Logo-->
-                    <a class="navbar-brand fw-bold fs-4 text-white mb-0" href="index.html">MagCon</a>
+    <style>
+        :root {
+            --mc-blue:      #2563eb;
+            --mc-deep-blue: #0f2a5e;
+        }
 
-                    <!--Search-->
-                    <form class="d-flex justify-content-center px-3" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-light" type="submit">Search</button>
-                    </form>
+        *, *::before, *::after {
+            transition: background-color 0.2s ease, color 0.2s ease,
+                        border-color 0.2s ease, box-shadow 0.2s ease;
+        }
 
-                    <!--Profile-->
-                    <div class="d-flex justify-content-end">
-                        <a class="ms-auto" role="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasProfile" aria-controls="offcanvasProfile">
-                            <img src="images/profile.png" alt="Profile" width="50" class="rounded-pill"/>
+        [data-bs-theme="dark"] body             { background: #0d1117; color: #e8edf5; }
+        [data-bs-theme="dark"] .card            { background: #161f2e; border-color: #1e3a6e; }
+        [data-bs-theme="dark"] .table           { --bs-table-bg: #161f2e; --bs-table-striped-bg: #1a2d4a; color: #e8edf5; }
+        [data-bs-theme="dark"] .form-control    { background: #0d1b2e; border-color: #1e3a6e; color: #e8edf5; }
+        [data-bs-theme="dark"] .form-control:focus { background: #0d1b2e; border-color: var(--mc-blue); box-shadow: 0 0 0 0.2rem rgba(37,99,235,.25); color: #e8edf5; }
+        [data-bs-theme="dark"] .form-control::placeholder { color: #4a6fa5; }
+        [data-bs-theme="dark"] .input-group-text { background: #0d1b2e; border-color: #1e3a6e; color: #94a3b8; }
+
+        [data-bs-theme="light"] body            { background: #f0f6ff; color: #0d1117; }
+        [data-bs-theme="light"] .card           { background: #ffffff; border-color: #c9d9f5; }
+        [data-bs-theme="light"] .table          { --bs-table-striped-bg: #dce8fb; }
+        [data-bs-theme="light"] .input-group-text { background: #f1f5fb; border-color: #c9d9f5; color: #64748b; }
+
+        .navbar                    { background: var(--mc-deep-blue) !important; }
+        .navbar .navbar-brand      { color: #fff !important; letter-spacing: .03em; }
+        .navbar .form-control      { background: rgba(255,255,255,.1); border-color: #4a6fa5; color: #fff; }
+        .navbar .form-control::placeholder { color: #94a3b8; }
+        .navbar .input-group-text  { background: rgba(255,255,255,.08); border-color: #4a6fa5; color: #94a3b8; }
+        .navbar .btn-outline-light { border-color: #4a6fa5; color: #cbd5e1; }
+        .navbar .btn-outline-light:hover { background: rgba(255,255,255,.12); color: #fff; }
+
+        #offcanvasProfile {
+            width: 260px !important;
+            top: 62px; height: auto !important; bottom: auto !important;
+            border-radius: 0 0 0 10px;
+            box-shadow: -4px 4px 20px rgba(0,0,0,.35);
+        }
+        [data-bs-theme="dark"]  #offcanvasProfile { background: #0f1e33; border-left: 2px solid var(--mc-deep-blue); }
+        [data-bs-theme="light"] #offcanvasProfile { background: #f0f6ff; border-left: 2px solid #c9d9f5; }
+
+        .profile-field {
+            display: flex; flex-direction: column;
+            padding: 8px 10px; border-radius: 6px; margin-bottom: 8px; font-size: .85rem;
+        }
+        [data-bs-theme="dark"]  .profile-field { background: #162035; border: 1px solid #1e3a6e; }
+        [data-bs-theme="light"] .profile-field { background: #fff;     border: 1px solid #c9d9f5; }
+        .profile-field .label { font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; opacity: .55; margin-bottom: 2px; }
+        .profile-field .value { font-weight: 500; }
+
+        .btn-primary       { background: var(--mc-blue); border-color: var(--mc-blue); }
+        .btn-primary:hover { background: #1d4ed8; border-color: #1d4ed8; }
+
+        /* Required field asterisk */
+        .required-label::after { content: " *"; color: #ef4444; font-weight: 700; }
+
+        /* Inline validation error */
+        .field-error .form-label   { color: #ef4444 !important; }
+        .field-error .form-control { border-color: #ef4444 !important; }
+        .field-error .error-msg    { display: block !important; color: #ef4444; font-size: .78rem; margin-top: 4px; }
+        .error-msg { display: none; }
+
+        .page-link { cursor: pointer; }
+
+        /* Spinner overlay for contact table */
+        #loadingOverlay {
+            display: none; position: absolute; inset: 0;
+            background: rgba(13,17,23,.55); border-radius: inherit;
+            z-index: 10; align-items: center; justify-content: center;
+        }
+        #loadingOverlay.active { display: flex; }
+        .contact-table-wrapper { position: relative; }
+
+        #toastContainer { position: fixed; top: 80px; right: 20px; z-index: 9999; }
+
+        .date-badge { font-size: .72rem; opacity: .65; }
+
+        #themeToggle { width: 36px; height: 36px; padding: 0; display: flex; align-items: center; justify-content: center; }
+        #themeToggle i { font-size: 1rem; }
+    </style>
+</head>
+
+<body>
+<header>
+    <nav class="navbar px-3" aria-label="Main navigation">
+        <div class="container-fluid align-items-center">
+
+            <a class="navbar-brand fw-bold fs-4 mb-0" href="index.html">ContactLein</a>
+
+            <form id="searchForm" class="d-flex align-items-center px-3 flex-grow-1"
+                  role="search" aria-label="Search contacts" style="max-width:420px;">
+                <div class="input-group">
+                    <span class="input-group-text" aria-hidden="true"><i class="bi bi-search"></i></span>
+                    <label for="siteSearch" class="visually-hidden">Search contacts</label>
+                    <input id="siteSearch" class="form-control" type="search"
+                           placeholder="Search contacts…" autocomplete="off">
+                    <button class="btn btn-outline-light" type="submit">Search</button>
+                </div>
+            </form>
+
+            <div class="d-flex align-items-center gap-3">
+                <button id="themeToggle" class="btn btn-outline-light btn-sm rounded-circle"
+                        aria-label="Toggle light and dark mode" title="Toggle theme">
+                    <i id="themeIcon" class="bi bi-moon-fill"></i>
+                </button>
+
+                <a role="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasProfile"
+                   aria-controls="offcanvasProfile" aria-label="Open profile menu" style="cursor:pointer;">
+                    <img src="images/profile.png" alt="User profile" width="46"
+                         class="rounded-pill border border-2" style="border-color:#4a6fa5!important;"
+                         loading="lazy"
+                         onerror="this.src='https://ui-avatars.com/api/?name=John+Doe&background=0f2a5e&color=fff&size=46'"/>
+                </a>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- Profile panel (top-right offcanvas) -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasProfile" aria-labelledby="offcanvasProfileLabel">
+        <div class="offcanvas-header pb-2">
+            <h6 class="offcanvas-title fw-semibold" id="offcanvasProfileLabel">My Profile</h6>
+            <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="offcanvas" aria-label="Close profile"></button>
+        </div>
+        <div class="offcanvas-body pt-1" style="padding:0 12px 14px;">
+            <!-- Populated dynamically from session on API hookup -->
+            <div class="profile-field"><span class="label">Name</span><span class="value" id="profileName">John Doe</span></div>
+            <div class="profile-field"><span class="label">Email</span><span class="value" id="profileEmail">john.doe@example.com</span></div>
+            <div class="profile-field"><span class="label">Phone</span><span class="value" id="profilePhone">(123) 456-7890</span></div>
+            <div class="profile-field"><span class="label">Member Since</span><span class="value" id="profileSince">January 2023</span></div>
+            <div class="mt-3">
+                <button type="button" class="btn btn-danger w-100 btn-sm"
+                        data-bs-dismiss="offcanvas"
+                        data-bs-toggle="modal" data-bs-target="#logoutConfirmModal">
+                    <i class="bi bi-box-arrow-right me-1"></i>Logout
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="container mt-4">
+
+    <!-- Add Contact -->
+    <section class="card mb-4" aria-labelledby="addContactHeading">
+        <div class="card-body">
+            <h2 class="card-title h5 mb-3" id="addContactHeading">
+                <i class="bi bi-person-plus me-2 text-primary"></i>Add a Contact
+            </h2>
+            <form id="addContactForm" novalidate aria-label="Add new contact">
+                <div class="row g-3">
+                    <div class="col-sm-6" id="wrap-firstName">
+                        <label for="firstName" class="form-label required-label">First Name</label>
+                        <input type="text" class="form-control" id="firstName" name="firstName"
+                               placeholder="First Name" autocomplete="given-name">
+                        <span class="error-msg">Please enter a first name.</span>
+                    </div>
+                    <div class="col-sm-6" id="wrap-lastName">
+                        <label for="lastName" class="form-label required-label">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" name="lastName"
+                               placeholder="Last Name" autocomplete="family-name">
+                        <span class="error-msg">Please enter a last name.</span>
+                    </div>
+                    <div class="col-sm-6" id="wrap-email">
+                        <label for="email" class="form-label required-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email"
+                               placeholder="email@example.com" autocomplete="email">
+                        <span class="error-msg">Please enter a valid email address.</span>
+                    </div>
+                    <div class="col-sm-6" id="wrap-phoneNumber">
+                        <label for="phoneNumber" class="form-label required-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber"
+                               placeholder="(555) 000-0000" autocomplete="tel">
+                        <span class="error-msg">Please enter a phone number.</span>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-plus-lg me-1"></i>Add Contact
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Contact List -->
+    <section class="card" aria-labelledby="contactListHeading">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                <h2 class="card-title h5 mb-0" id="contactListHeading">
+                    <i class="bi bi-people me-2 text-primary"></i>Contact List
+                </h2>
+                <span class="text-body-secondary small" id="resultsMeta"></span>
+            </div>
+
+            <div class="contact-table-wrapper">
+                <div id="loadingOverlay" role="status" aria-live="polite">
+                    <div class="spinner-border text-primary" aria-label="Loading contacts"></div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle" id="contactsTable" aria-label="List of contacts">
+                        <thead>
+                            <tr>
+                                <th scope="col">First Name</th>
+                                <th scope="col">Last Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Phone</th>
+                                <th scope="col">Created</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contactsTableBody">
+                            <!-- Populated by renderContacts() -->
+                            <tr>
+                                <td>John</td>
+                                <td>Doe</td>
+                                <td>john.doe@example.com</td>
+                                <td>(123) 456-7890</td>
+                                <td><span class="date-badge">Jan 15, 2025</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary me-1"
+                                            data-bs-toggle="modal" data-bs-target="#editContactModal"
+                                            aria-label="Edit John Doe">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger"
+                                            data-bs-toggle="modal" data-bs-target="#deleteContactModal"
+                                            aria-label="Delete John Doe">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="emptyState" class="text-center py-4 text-body-secondary d-none">
+                    <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+                    No contacts found.
+                </div>
+            </div>
+
+            <nav aria-label="Contact list pagination" class="mt-3">
+                <ul class="pagination pagination-sm justify-content-center mb-0">
+                    <li class="page-item disabled" id="prevPageItem">
+                        <a class="page-link" id="prevPage" aria-label="Previous page">
+                            <i class="bi bi-chevron-left"></i>
                         </a>
-                    </div>
-                    
-                </div>
+                    </li>
+                    <li class="page-item active"><a class="page-link" id="currentPageBtn">1</a></li>
+                    <li class="page-item" id="nextPageItem">
+                        <a class="page-link" id="nextPage" aria-label="Next page">
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+                </ul>
             </nav>
+        </div>
+    </section>
+</main>
 
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasProfile" aria-labelledby="offcanvasProfileLabel">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasProfileLabel">Profile</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <!-- Profile content goes here -->
-                    <p>Name: John Doe</p>
-                    <p>Email: john.doe@example.com</p>
-                    <p>Phone: (123) 456-7890</p>
-                    <p>Member since: January 2023</p>
-                    <p><a href="signin.html">Logout</a></p>
-                </div>
+<!-- Edit Contact Modal -->
+<div class="modal fade" id="editContactModal" tabindex="-1" aria-labelledby="editContactModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editContactModalLabel">
+                    <i class="bi bi-pencil-square me-2"></i>Edit Contact
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-        </header>
-        <main class="container">
-            <!-- Add a Contact Section -->
-            <section class="card">
-                <h2> Add a Contact</h2>
-                <form method="POST" class="form-grid">
-                    <input type="text" name="firstName" placeholder="First Name" required>
-                    <input type="text" name="lastName" placeholder="Last Name" required>
-                    <input type="email"name="email" placeholder="Email" required>
-                    <input type="tel" name="phoneNumber" placeholder="Phone Number" required>
-                    <button type="submit" class="btn btn-primary">Add Contact</button>
-                </form> 
-            </section>
-
-            <!-- Contact List Section -->
-             <section class="card mt-4">
-                <h2>Contact List</h2>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">First Name</th>
-                            <th scope="col">Last Name</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Phone Number</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Example contact entry -->
-                        <tr>
-                            <td>John</td>
-                            <td>Doe</td>
-                            <td>john.doe@example.com</td>
-                            <td>(123) 456-7890</td>
-                            <td><a href="#" data-bs-toggle="modal" data-bs-target="#editContactModal">Edit</a> | <a href="#" data-bs-toggle="modal" data-bs-target="#deleteContactModal">Delete</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-        </main>
-
-        <!-- Edit Contact Modal -->
-        <div class="modal fade" id="editContactModal" tabindex="-1" aria-labelledby="editContactModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editContactModalLabel">Edit Contact</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-body">
+                <form aria-label="Edit contact details">
+                    <div class="mb-3">
+                        <label for="editFirstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="editFirstName" autocomplete="given-name">
                     </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="mb-3">
-                                <label for="editFirstName" class="form-label">First Name</label>
-                                <input type="text" class="form-control" id="editFirstName" value="John">
-                            </div>
-                            <div class="mb-3">
-                                <label for="editLastName" class="form-label">Last Name</label>
-                                <input type="text" class="form-control" id="editLastName" value="Doe">
-                            </div>
-                            <div class="mb-3">
-                                <label for="editEmail" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="editEmail" value="john.doe@example.com">
-                            </div>
-                            <div class="mb-3">
-                                <label for="editPhoneNumber" class="form-label">Phone Number</label>
-                                <input type="tel" class="form-control" id="editPhoneNumber" value="(123) 456-7890">
-                            </div>
-                        </form>
+                    <div class="mb-3">
+                        <label for="editLastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="editLastName" autocomplete="family-name">
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary">Save Changes</button>
+                    <div class="mb-3">
+                        <label for="editEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editEmail" autocomplete="email">
                     </div>
-                </div>
+                    <div class="mb-3">
+                        <label for="editPhoneNumber" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="editPhoneNumber" autocomplete="tel">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveChangesBtn">
+                    <i class="bi bi-check-lg me-1"></i>Save Changes
+                </button>
             </div>
         </div>
+    </div>
+</div>
 
-        <!-- Delete Contact Modal -->
-        <div class="modal fade" id="deleteContactModal" tabindex="-1" aria-labelledby="deleteContactModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="deleteContactModalLabel">Delete Contact</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Are you sure you want to delete this contact?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-danger">Delete</button>
-                    </div>
-                </div>
+<!-- Delete Contact Modal -->
+<div class="modal fade" id="deleteContactModal" tabindex="-1" aria-labelledby="deleteContactModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteContactModalLabel">
+                    <i class="bi bi-trash me-2 text-danger"></i>Delete Contact
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">Are you sure you want to delete <strong id="deleteContactName">this contact</strong>? This cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger btn-sm" id="confirmDeleteBtn">
+                    <i class="bi bi-trash me-1"></i>Delete
+                </button>
             </div>
         </div>
+    </div>
+</div>
 
-        <footer>
-            <!-- place footer here -->
-        </footer>
-        <!-- Bootstrap JavaScript Bundle (includes Popper) -->
-        <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-            crossorigin="anonymous"
-        ></script>
-    </body>
+<!-- Logout Confirm Modal -->
+<div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-labelledby="logoutConfirmLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logoutConfirmLabel">Confirm Logout</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">Are you sure you want to log out?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                <a href="signin.html" class="btn btn-danger btn-sm">
+                    <i class="bi bi-box-arrow-right me-1"></i>Yes, Logout
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+<footer class="container mt-4 mb-3">
+    <p class="text-body-secondary text-center small mb-0">&copy; 2025 ContactLein. All rights reserved.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+
+<script>
+/* ── Auth guard: redirect to login if no token ── */
+if (!localStorage.getItem('token')) window.location.href = 'signin.html';
+
+/* ── Theme ── */
+const htmlEl = document.documentElement;
+
+function applyTheme(theme) {
+    htmlEl.setAttribute('data-bs-theme', theme);
+    document.getElementById('themeIcon').className = theme === 'dark' ? 'bi bi-moon-fill' : 'bi bi-sun-fill';
+    localStorage.setItem('theme', theme);
+}
+applyTheme(localStorage.getItem('theme') || 'dark');
+document.getElementById('themeToggle').addEventListener('click', () => {
+    applyTheme(htmlEl.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark');
+});
+
+/* ── Toast ── */
+function showToast(message, type = 'success') {
+    const id   = 'toast-' + Date.now();
+    const bg   = { success: '#16a34a', danger: '#dc2626', info: '#2563eb' }[type] ?? '#2563eb';
+    const icon = { success: 'bi-check-circle-fill', danger: 'bi-trash-fill', info: 'bi-info-circle-fill' }[type];
+    document.getElementById('toastContainer').insertAdjacentHTML('beforeend', `
+        <div id="${id}" class="toast align-items-center text-white border-0 show mb-2"
+             role="alert" aria-live="assertive" aria-atomic="true"
+             style="background:${bg};border-radius:8px;min-width:230px;">
+            <div class="d-flex">
+                <div class="toast-body fw-semibold d-flex align-items-center gap-2">
+                    <i class="bi ${icon}"></i>${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>`);
+    setTimeout(() => document.getElementById(id)?.remove(), 3500);
+}
+
+/* ── Pagination ── */
+const PAGE_SIZE = 10;
+let currentPage = 1, currentSearch = '', totalPages = 1;
+
+function updatePagination(total) {
+    totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+    document.getElementById('currentPageBtn').textContent = currentPage;
+    document.getElementById('prevPageItem').classList.toggle('disabled', currentPage <= 1);
+    document.getElementById('nextPageItem').classList.toggle('disabled', currentPage >= totalPages);
+    document.getElementById('resultsMeta').textContent =
+        `Page ${currentPage} of ${totalPages} · ${total} contact${total !== 1 ? 's' : ''}`;
+}
+
+/* ── Load contacts: GET /api/contacts?search=&page=&limit= ── */
+function loadContacts(page, search) {
+    document.getElementById('loadingOverlay').classList.add('active');
+    // TODO: fetch(`/api/contacts?search=${encodeURIComponent(search)}&page=${page}&limit=${PAGE_SIZE}`, {
+    //   headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+    // }).then(r => r.json()).then(d => renderContacts(d.contacts, d.total));
+
+    // Placeholder until API is wired
+    setTimeout(() => {
+        document.getElementById('loadingOverlay').classList.remove('active');
+        updatePagination(1);
+    }, 400);
+}
+
+function renderContacts(contacts, total) {
+    const tbody = document.getElementById('contactsTableBody');
+    const empty = document.getElementById('emptyState');
+    document.getElementById('loadingOverlay').classList.remove('active');
+
+    if (!contacts?.length) {
+        tbody.innerHTML = '';
+        empty.classList.remove('d-none');
+        updatePagination(0);
+        return;
+    }
+    empty.classList.add('d-none');
+    tbody.innerHTML = contacts.map(c => `
+        <tr>
+            <td>${esc(c.firstName)}</td>
+            <td>${esc(c.lastName)}</td>
+            <td>${esc(c.email)}</td>
+            <td>${esc(c.phone)}</td>
+            <td><span class="date-badge">${fmtDate(c.createdAt)}</span></td>
+            <td>
+                <button class="btn btn-sm btn-outline-primary me-1"
+                        onclick="openEditModal(${c.id})"
+                        aria-label="Edit ${esc(c.firstName)} ${esc(c.lastName)}">
+                    <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger"
+                        onclick="openDeleteModal(${c.id}, '${esc(c.firstName)} ${esc(c.lastName)}')"
+                        aria-label="Delete ${esc(c.firstName)} ${esc(c.lastName)}">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </td>
+        </tr>`).join('');
+    updatePagination(total);
+}
+
+const esc     = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const fmtDate = iso => iso ? new Date(iso).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '—';
+
+document.getElementById('prevPage').addEventListener('click', () => {
+    if (currentPage > 1) loadContacts(--currentPage, currentSearch);
+});
+document.getElementById('nextPage').addEventListener('click', () => {
+    if (currentPage < totalPages) loadContacts(++currentPage, currentSearch);
+});
+
+/* ── Search ── */
+document.getElementById('searchForm').addEventListener('submit', e => {
+    e.preventDefault();
+    currentSearch = document.getElementById('siteSearch').value.trim();
+    currentPage = 1;
+    loadContacts(currentPage, currentSearch);
+});
+document.getElementById('siteSearch').addEventListener('search', e => {
+    if (!e.target.value) { currentSearch = ''; loadContacts(currentPage = 1, ''); }
+});
+
+/* ── Add Contact validation ── */
+const addFields = ['firstName', 'lastName', 'email', 'phoneNumber'];
+
+function validateField(id) {
+    const val = document.getElementById(id).value.trim();
+    const ok  = id === 'email' ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) : val !== '';
+    document.getElementById('wrap-' + id).classList.toggle('field-error', !ok);
+    return ok;
+}
+
+addFields.forEach(id => {
+    document.getElementById(id).addEventListener('blur',  () => validateField(id));
+    document.getElementById(id).addEventListener('input', () => {
+        if (document.getElementById('wrap-' + id).classList.contains('field-error')) validateField(id);
+    });
+});
+
+document.getElementById('addContactForm').addEventListener('submit', e => {
+    e.preventDefault();
+    if (!addFields.map(validateField).every(Boolean)) return;
+
+    // TODO: POST /api/contacts with JSON payload, then call loadContacts()
+    showToast('Contact added successfully!', 'success');
+    e.target.reset();
+    addFields.forEach(id => document.getElementById('wrap-' + id).classList.remove('field-error'));
+});
+
+/* ── Edit modal: POST /api/contacts/:id ── */
+let editingId = null;
+
+function openEditModal(id) {
+    editingId = id;
+    // TODO: fetch contact by id and populate fields
+    new bootstrap.Modal(document.getElementById('editContactModal')).show();
+}
+document.getElementById('saveChangesBtn').addEventListener('click', () => {
+    bootstrap.Modal.getInstance(document.getElementById('editContactModal'))?.hide();
+    // TODO: PUT /api/contacts/:editingId
+    showToast('Contact updated successfully!', 'success');
+});
+
+/* ── Delete modal: DELETE /api/contacts/:id ── */
+let deletingId = null;
+
+function openDeleteModal(id, name) {
+    deletingId = id;
+    document.getElementById('deleteContactName').textContent = name;
+    new bootstrap.Modal(document.getElementById('deleteContactModal')).show();
+}
+document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+    bootstrap.Modal.getInstance(document.getElementById('deleteContactModal'))?.hide();
+    // TODO: DELETE /api/contacts/:deletingId, then loadContacts()
+    showToast('Contact deleted.', 'danger');
+});
+</script>
+</body>
 </html>

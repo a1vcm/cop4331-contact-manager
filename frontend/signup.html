@@ -1,101 +1,486 @@
 <!doctype html>
 <html lang="en" data-bs-theme="dark">
-    <head>
-        <title>COP4331 Small Project</title>
-        <!-- Required meta tags -->
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+    <title>ContactLein – Sign Up</title>
 
-        <!-- Bootstrap CSS v5.3.8 -->
-        <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-            crossorigin="anonymous"
-        />
-        <link rel="stylesheet" href="css/styles.css" type="text/css">
-    </head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Create your ContactLein account." />
 
-    <body>
-        <div class ="p-5 bg-primary text-white text-center">
-                <h1>MagCon</h1>
-                <p>Magic in Every Connection</p>
-        </div>
+    <link rel="icon" href="images/favicon.ico" />
 
-        <!-- Sign Up Form -->
-        <div class = "d-flex justify-content-center align-items-center vh-100">
-            <main class="border rounded p-5 shadow" style="width: 100%; max-width: 480px;">
-                <form action="https://api.example.com/users" method="POST">
-                    
-                    <!--Name-->
-                    <div class="mb-1">
-                        <label class="form-label">Name</label>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="mb-3">
-                                <label for="firstName" class="form-label"></label>
-                                <input type="text" class="form-control" id="firstName" placeholder="Enter First Name" name="firstName" required>
-                            </div>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+          crossorigin="anonymous"/>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+          rel="stylesheet"/>
+
+    <style>
+        :root {
+            --mc-blue: #2563eb;
+            --mc-deep-blue: #0f2a5e;
+        }
+
+        * {
+            transition: background-color .2s ease,
+                        color .2s ease,
+                        border-color .2s ease;
+        }
+
+        body {
+            min-height: 100vh;
+        }
+
+        [data-bs-theme="dark"] body {
+            background: #0d1117;
+            color: #e8edf5;
+        }
+
+        [data-bs-theme="light"] body {
+            background: #f0f6ff;
+            color: #0d1117;
+        }
+
+        .navbar {
+            background: var(--mc-deep-blue) !important;
+        }
+
+        .auth-wrapper {
+            min-height: calc(100vh - 72px);
+            padding: 40px 12px;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 560px;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        [data-bs-theme="dark"] .auth-card {
+            background: #161f2e;
+            border: 1px solid #1e3a6e;
+        }
+
+        [data-bs-theme="light"] .auth-card {
+            background: #fff;
+            border: 1px solid #c9d9f5;
+        }
+
+        .form-control,
+        .input-group-text {
+            border-radius: 10px;
+        }
+
+        [data-bs-theme="dark"] .form-control,
+        [data-bs-theme="dark"] .input-group-text {
+            background: #0d1b2e;
+            border-color: #1e3a6e;
+            color: #e8edf5;
+        }
+
+        [data-bs-theme="dark"] .form-control:focus {
+            background: #0d1b2e;
+            color: #fff;
+            border-color: var(--mc-blue);
+            box-shadow: 0 0 0 .2rem rgba(37,99,235,.25);
+        }
+
+        [data-bs-theme="dark"] .form-control::placeholder {
+            color: #7b8ba7;
+        }
+
+        .btn-primary {
+            background: var(--mc-blue);
+            border-color: var(--mc-blue);
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            border-color: #1d4ed8;
+        }
+
+        .required-label::after {
+            content: " *";
+            color: #ef4444;
+            font-weight: 700;
+        }
+
+        .field-error .form-label {
+            color: #ef4444 !important;
+        }
+
+        .field-error .form-control,
+        .field-error .input-group-text {
+            border-color: #ef4444 !important;
+        }
+
+        .error-msg {
+            display: none;
+            color: #ef4444;
+            font-size: .8rem;
+            margin-top: 4px;
+        }
+
+        .field-error .error-msg {
+            display: block;
+        }
+
+        #themeToggle {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        footer {
+            opacity: .7;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar px-3">
+    <div class="container-fluid">
+
+        <a class="navbar-brand fw-bold fs-4 text-white" href="#">
+            ContactLein
+
+        </a>
+
+        <button id="themeToggle"
+                class="btn btn-outline-light rounded-circle"
+                aria-label="Toggle theme">
+            <i id="themeIcon" class="bi bi-moon-fill"></i>
+        </button>
+
+    </div>
+</nav>
+
+<main class="container auth-wrapper d-flex justify-content-center align-items-center">
+
+    <section class="card auth-card shadow-lg">
+        <div class="card-body p-4 p-md-5">
+
+            <div class="text-center mb-4">
+                <h1 class="h3 fw-bold mb-2">Create Account</h1>
+
+                <p class="text-body-secondary mb-0">
+                    Start managing your contacts with ContactLein.
+                </p>
+            </div>
+
+            <form id="signupForm" action="#" method="POST" novalidate>
+
+                <!-- Name -->
+                <div class="row g-3">
+
+                    <div class="col-md-6" id="wrap-firstName">
+                        <label for="firstName" class="form-label required-label">
+                            First Name
+                        </label>
+
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-person"></i>
+                            </span>
+
+                            <input type="text"
+                                   class="form-control"
+                                   id="firstName"
+                                   name="firstName"
+                                   placeholder="Enter first name"
+                                   autocomplete="given-name"
+                                   required>
                         </div>
-                        <div class="col">
-                            <div class="mb-3">
-                                <label for="lastName" class="form-label"></label>
-                                <input type="text" class="form-control" id="lastName" placeholder="Enter Last Name" name="lastName" required>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!--Email & Phone-->
-                    <div class="row">
-                        <div class="col">
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" placeholder="Enter Email" name="email" required>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="mb-3">
-                                <label for="phone" class="form-label">Phone Number</label>
-                                <input type="tel" class="form-control" id="phone" placeholder="Enter Phone Number" name="phone" required>
-                            </div>
-                        </div>
+
+                        <span class="error-msg">
+                            Please enter your first name.
+                        </span>
                     </div>
 
-                    <!--Username & Password-->
-                    <div class="row">
-                        <div class="col">
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="username" placeholder="Enter Username" name="username" required>
-                            </div>
+                    <div class="col-md-6" id="wrap-lastName">
+                        <label for="lastName" class="form-label required-label">
+                            Last Name
+                        </label>
+
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-person"></i>
+                            </span>
+
+                            <input type="text"
+                                   class="form-control"
+                                   id="lastName"
+                                   name="lastName"
+                                   placeholder="Enter last name"
+                                   autocomplete="family-name"
+                                   required>
                         </div>
-                        <div class="col">
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" placeholder="Enter Password" name="password" required>
-                            </div>
-                        </div>
+
+                        <span class="error-msg">
+                            Please enter your last name.
+                        </span>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">Create Account</button>
-                </form>
-            
-                <!--Transition to Sign In Form-->
-                <div class="text-center mt-3">
-                    Already Have An Account?<a href="signin.html"> Sign In!</a>  
+
+                    <!-- Email -->
+                    <div class="col-md-6" id="wrap-email">
+                        <label for="email" class="form-label required-label">
+                            Email
+                        </label>
+
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-envelope"></i>
+                            </span>
+
+                            <input type="email"
+                                   class="form-control"
+                                   id="email"
+                                   name="email"
+                                   placeholder="email@example.com"
+                                   autocomplete="email"
+                                   required>
+                        </div>
+
+                        <span class="error-msg">
+                            Please enter a valid email.
+                        </span>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="col-md-6" id="wrap-phone">
+                        <label for="phone" class="form-label required-label">
+                            Phone Number
+                        </label>
+
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-telephone"></i>
+                            </span>
+
+                            <input type="tel"
+                                   class="form-control"
+                                   id="phone"
+                                   name="phone"
+                                   placeholder="(555) 000-0000"
+                                   autocomplete="tel"
+                                   required>
+                        </div>
+
+                        <span class="error-msg">
+                            Please enter a phone number.
+                        </span>
+                    </div>
+
+                    <!-- Username -->
+                    <div class="col-md-6" id="wrap-username">
+                        <label for="username" class="form-label required-label">
+                            Username
+                        </label>
+
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-at"></i>
+                            </span>
+
+                            <input type="text"
+                                   class="form-control"
+                                   id="username"
+                                   name="username"
+                                   placeholder="Enter username"
+                                   autocomplete="username"
+                                   required>
+                        </div>
+
+                        <span class="error-msg">
+                            Please enter a username.
+                        </span>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="col-md-6" id="wrap-password">
+                        <label for="password" class="form-label required-label">
+                            Password
+                        </label>
+
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-lock"></i>
+                            </span>
+
+                            <input type="password"
+                                   class="form-control"
+                                   id="password"
+                                   name="password"
+                                   placeholder="Minimum 8 characters"
+                                   autocomplete="new-password"
+                                   minlength="8"
+                                   required>
+                        </div>
+
+                        <span class="error-msg">
+                            Password must be at least 8 characters.
+                        </span>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="col-12" id="wrap-confirmPassword">
+                        <label for="confirmPassword" class="form-label required-label">
+                            Confirm Password
+                        </label>
+
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-shield-lock"></i>
+                            </span>
+
+                            <input type="password"
+                                   class="form-control"
+                                   id="confirmPassword"
+                                   name="confirmPassword"
+                                   placeholder="Re-enter password"
+                                   autocomplete="new-password"
+                                   required>
+                        </div>
+
+                        <span class="error-msg">
+                            Passwords do not match.
+                        </span>
+                    </div>
+
                 </div>
-            </main> 
+
+                <button type="submit" class="btn btn-primary w-100 mt-4">
+                    <i class="bi bi-person-plus me-1"></i>
+                    Create Account
+                </button>
+
+            </form>
+
+            <div class="text-center mt-4">
+                <span class="text-body-secondary">
+                    Already have an account?
+                </span>
+
+                <a href="signin.html" class="text-decoration-none fw-semibold">
+                    Sign In
+                </a>
+            </div>
+
         </div>
-       
-        <footer>
-            © 2026 MagCon. All rights reserved.
-        </footer>
-        
-        <!-- Bootstrap JavaScript Bundle (includes Popper) -->
-        <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-            crossorigin="anonymous"
-        ></script>
-    </body>
+    </section>
+
+</main>
+
+<footer class="text-center small pb-3">
+    © 2026 ContactLein. All rights reserved.
+</footer>
+
+<script>
+const htmlEl = document.documentElement;
+
+function applyTheme(theme) {
+    htmlEl.setAttribute('data-bs-theme', theme);
+
+    document.getElementById('themeIcon').className =
+        theme === 'dark'
+            ? 'bi bi-moon-fill'
+            : 'bi bi-sun-fill';
+
+    localStorage.setItem('theme', theme);
+}
+
+applyTheme(localStorage.getItem('theme') || 'dark');
+
+document.getElementById('themeToggle').addEventListener('click', () => {
+    applyTheme(
+        htmlEl.getAttribute('data-bs-theme') === 'dark'
+            ? 'light'
+            : 'dark'
+    );
+});
+
+/* Validation */
+
+const fields = [
+    'firstName',
+    'lastName',
+    'email',
+    'phone',
+    'username',
+    'password',
+    'confirmPassword'
+];
+
+function validateField(id) {
+    const input = document.getElementById(id);
+    const value = input.value.trim();
+
+    let valid = true;
+
+    if (id === 'email') {
+        valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    }
+    else if (id === 'password') {
+        valid = value.length >= 8;
+    }
+    else if (id === 'confirmPassword') {
+        valid = value === document.getElementById('password').value.trim();
+    }
+    else {
+        valid = value !== '';
+    }
+
+    document.getElementById('wrap-' + id)
+        .classList.toggle('field-error', !valid);
+
+    return valid;
+}
+
+fields.forEach(id => {
+
+    document.getElementById(id).addEventListener('blur', () => {
+        validateField(id);
+    });
+
+    document.getElementById(id).addEventListener('input', () => {
+
+        const wrapper = document.getElementById('wrap-' + id);
+
+        if (wrapper.classList.contains('field-error')) {
+            validateField(id);
+        }
+
+        if (id === 'password') {
+            validateField('confirmPassword');
+        }
+    });
+
+});
+
+document.getElementById('signupForm').addEventListener('submit', e => {
+
+    e.preventDefault();
+
+    const valid = fields.map(validateField).every(Boolean);
+
+    if (!valid) return;
+
+    // TODO: POST /api/register
+
+    window.location.href = 'signin.html';
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+
+</body>
 </html>

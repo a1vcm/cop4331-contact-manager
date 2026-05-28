@@ -235,6 +235,11 @@ document.getElementById('themeToggle').addEventListener('click', () => {
     applyTheme(htmlEl.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark');
 });
 
+/* ── API Base URL ── */
+const API_BASE = window.location.hostname === 'localhost'
+    ? 'http://206.81.15.115'
+    : 'http://206.81.15.115';
+
 /* ── Submit → login.php ── */
 document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -260,7 +265,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Signing in…';
 
     try {
-        const response = await fetch('login.php', {   // FIX: was '/api/login'
+        const response = await fetch(`${API_BASE}/login.php`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password })

@@ -400,6 +400,11 @@ fields.forEach(id => {
     });
 });
 
+/* ── API Base URL ── */
+const API_BASE = window.location.hostname === 'localhost'
+    ? 'http://206.81.15.115'
+    : 'http://206.81.15.115';
+
 /* ── Submit → register.php ── */
 document.getElementById('signupForm').addEventListener('submit', async e => {
     e.preventDefault();
@@ -419,7 +424,7 @@ document.getElementById('signupForm').addEventListener('submit', async e => {
     submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Creating account…';
 
     try {
-        const response = await fetch('register.php', {
+        const response = await fetch(`${API_BASE}/register.php`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

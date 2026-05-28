@@ -351,7 +351,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-                <a href="signin.html" class="btn btn-danger btn-sm">
+                <a href="signin.html" class="btn btn-danger btn-sm" onclick="localStorage.removeItem('userId');localStorage.removeItem('firstName');localStorage.removeItem('lastName');">
                     <i class="bi bi-box-arrow-right me-1"></i>Yes, Logout
                 </a>
             </div>
@@ -370,8 +370,15 @@
         crossorigin="anonymous"></script>
 
 <script>
-/* ── Auth guard: redirect to login if no token ── */
-if (!localStorage.getItem('token')) window.location.href = 'signin.html';
+/* ── Auth guard: redirect to login if not logged in ── */
+if (!localStorage.getItem('userId')) window.location.href = 'signin.html';
+
+/* ── Populate profile name from localStorage ── */
+const firstName = localStorage.getItem('firstName') || '';
+const lastName  = localStorage.getItem('lastName')  || '';
+if (firstName || lastName) {
+    document.getElementById('profileName').textContent = `${firstName} ${lastName}`.trim();
+}
 
 /* ── Theme ── */
 const htmlEl = document.documentElement;

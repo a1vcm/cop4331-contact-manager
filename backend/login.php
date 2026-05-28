@@ -1,32 +1,40 @@
 <?php
+require_once "utils.php";
 
-    require_once 'utils.php';
+$inData = getRequestInfo();
 
-	$inData = getRequestInfo();
+$username = $inData["username"] ?? $inData["login"] ?? "";
+$password = $inData["password"] ?? "";
 
-    // user does not connect directly to database, so use line below
-	$conn = new mysqli("localhost", "admin", "adminCOP", "COP4331"); // API connects to database using this
-	if( $conn->connect_error )
-	{
-		returnWithError( $conn->connect_error );
-	}
-	else
-	{
-        $stmt = $conn->prepare("SELECT ID, FirstName, LastName FROM Users WHERE Login=? AND Password=?");
-		$stmt->bind_param("ss", $inData["username"], $inData["password"]);
-		$stmt->execute();
-		$result = $stmt->get_result();
+if ($username === "" || $password === "") {
+    returnWithError("Missing username or password", 400);
+}
 
-		if( $row = $result->fetch_assoc()  )
-		{
-			returnWithLoginInfo( $row['FirstName'], $row['LastName'], $row['ID'] );
-		}
-		else
-		{
-			returnWithError("No Records Found");
-		}
+$conn = getDatabaseConnection();
 
-		$stmt->close();
-		$conn->close();
-	}
+if ($conn == null) {
+    returnWithError("Database connection failed", 500);
+}
+
+$stmt = $conn->prepare("SELECT ID, FirstName, LastName, Login FROM Users WHERE Login=? AND Password=?");
+$stmt->bind_param("ss", $username, $password);
+$stmt->execute();
+
+$result = $stmt->get_result();
+
+if ($row = $result->fetch_assoc()) {
+    sendJson(array(
+        "id" => intval($row["ID"]),
+        "firstName" => $row["FirstName"],
+        "lastName" => $row["LastName"],
+        "username" => $row["Login"],
+        "token" => "user-" . $row["ID"],
+        "error" => ""
+    ));
+} else {
+    returnWithError("No Records Found", 401);
+}
+
+$stmt->close();
+$conn->close();
 ?>

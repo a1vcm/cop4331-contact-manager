@@ -140,6 +140,11 @@
         footer {
             opacity: .7;
         }
+
+        /* Server error banner */
+        #serverError {
+            display: none;
+        }
     </style>
 </head>
 
@@ -150,7 +155,6 @@
 
         <a class="navbar-brand fw-bold fs-4 text-white" href="#">
             ContactLein
-
         </a>
 
         <button id="themeToggle"
@@ -169,27 +173,30 @@
 
             <div class="text-center mb-4">
                 <h1 class="h3 fw-bold mb-2">Create Account</h1>
-
                 <p class="text-body-secondary mb-0">
                     Start managing your contacts with ContactLein.
                 </p>
             </div>
 
-            <form id="signupForm" action="#" method="POST" novalidate>
+            <!-- Server-side error banner -->
+            <div id="serverError" class="alert alert-danger py-2 mb-3" role="alert">
+                <i class="bi bi-exclamation-circle me-1"></i>
+                <span id="serverErrorMsg"></span>
+            </div>
 
-                <!-- Name -->
+            <form id="signupForm" novalidate>
+
                 <div class="row g-3">
 
+                    <!-- First Name -->
                     <div class="col-md-6" id="wrap-firstName">
                         <label for="firstName" class="form-label required-label">
                             First Name
                         </label>
-
                         <div class="input-group">
                             <span class="input-group-text">
                                 <i class="bi bi-person"></i>
                             </span>
-
                             <input type="text"
                                    class="form-control"
                                    id="firstName"
@@ -198,22 +205,18 @@
                                    autocomplete="given-name"
                                    required>
                         </div>
-
-                        <span class="error-msg">
-                            Please enter your first name.
-                        </span>
+                        <span class="error-msg">Please enter your first name.</span>
                     </div>
 
+                    <!-- Last Name -->
                     <div class="col-md-6" id="wrap-lastName">
                         <label for="lastName" class="form-label required-label">
                             Last Name
                         </label>
-
                         <div class="input-group">
                             <span class="input-group-text">
                                 <i class="bi bi-person"></i>
                             </span>
-
                             <input type="text"
                                    class="form-control"
                                    id="lastName"
@@ -222,10 +225,7 @@
                                    autocomplete="family-name"
                                    required>
                         </div>
-
-                        <span class="error-msg">
-                            Please enter your last name.
-                        </span>
+                        <span class="error-msg">Please enter your last name.</span>
                     </div>
 
                     <!-- Email -->
@@ -233,12 +233,10 @@
                         <label for="email" class="form-label required-label">
                             Email
                         </label>
-
                         <div class="input-group">
                             <span class="input-group-text">
                                 <i class="bi bi-envelope"></i>
                             </span>
-
                             <input type="email"
                                    class="form-control"
                                    id="email"
@@ -247,10 +245,7 @@
                                    autocomplete="email"
                                    required>
                         </div>
-
-                        <span class="error-msg">
-                            Please enter a valid email.
-                        </span>
+                        <span class="error-msg">Please enter a valid email.</span>
                     </div>
 
                     <!-- Phone -->
@@ -258,12 +253,10 @@
                         <label for="phone" class="form-label required-label">
                             Phone Number
                         </label>
-
                         <div class="input-group">
                             <span class="input-group-text">
                                 <i class="bi bi-telephone"></i>
                             </span>
-
                             <input type="tel"
                                    class="form-control"
                                    id="phone"
@@ -272,10 +265,7 @@
                                    autocomplete="tel"
                                    required>
                         </div>
-
-                        <span class="error-msg">
-                            Please enter a phone number.
-                        </span>
+                        <span class="error-msg">Please enter a phone number.</span>
                     </div>
 
                     <!-- Username -->
@@ -283,12 +273,10 @@
                         <label for="username" class="form-label required-label">
                             Username
                         </label>
-
                         <div class="input-group">
                             <span class="input-group-text">
                                 <i class="bi bi-at"></i>
                             </span>
-
                             <input type="text"
                                    class="form-control"
                                    id="username"
@@ -297,10 +285,7 @@
                                    autocomplete="username"
                                    required>
                         </div>
-
-                        <span class="error-msg">
-                            Please enter a username.
-                        </span>
+                        <span class="error-msg">Please enter a username.</span>
                     </div>
 
                     <!-- Password -->
@@ -308,12 +293,10 @@
                         <label for="password" class="form-label required-label">
                             Password
                         </label>
-
                         <div class="input-group">
                             <span class="input-group-text">
                                 <i class="bi bi-lock"></i>
                             </span>
-
                             <input type="password"
                                    class="form-control"
                                    id="password"
@@ -323,10 +306,7 @@
                                    minlength="8"
                                    required>
                         </div>
-
-                        <span class="error-msg">
-                            Password must be at least 8 characters.
-                        </span>
+                        <span class="error-msg">Password must be at least 8 characters.</span>
                     </div>
 
                     <!-- Confirm Password -->
@@ -334,12 +314,10 @@
                         <label for="confirmPassword" class="form-label required-label">
                             Confirm Password
                         </label>
-
                         <div class="input-group">
                             <span class="input-group-text">
                                 <i class="bi bi-shield-lock"></i>
                             </span>
-
                             <input type="password"
                                    class="form-control"
                                    id="confirmPassword"
@@ -348,15 +326,12 @@
                                    autocomplete="new-password"
                                    required>
                         </div>
-
-                        <span class="error-msg">
-                            Passwords do not match.
-                        </span>
+                        <span class="error-msg">Passwords do not match.</span>
                     </div>
 
                 </div>
 
-                <button type="submit" class="btn btn-primary w-100 mt-4">
+                <button type="submit" id="submitBtn" class="btn btn-primary w-100 mt-4">
                     <i class="bi bi-person-plus me-1"></i>
                     Create Account
                 </button>
@@ -364,13 +339,8 @@
             </form>
 
             <div class="text-center mt-4">
-                <span class="text-body-secondary">
-                    Already have an account?
-                </span>
-
-                <a href="signin.html" class="text-decoration-none fw-semibold">
-                    Sign In
-                </a>
+                <span class="text-body-secondary">Already have an account?</span>
+                <a href="signin.html" class="text-decoration-none fw-semibold">Sign In</a>
             </div>
 
         </div>
@@ -383,98 +353,104 @@
 </footer>
 
 <script>
+/* ── Theme ── */
 const htmlEl = document.documentElement;
 
 function applyTheme(theme) {
     htmlEl.setAttribute('data-bs-theme', theme);
-
     document.getElementById('themeIcon').className =
-        theme === 'dark'
-            ? 'bi bi-moon-fill'
-            : 'bi bi-sun-fill';
-
+        theme === 'dark' ? 'bi bi-moon-fill' : 'bi bi-sun-fill';
     localStorage.setItem('theme', theme);
 }
 
 applyTheme(localStorage.getItem('theme') || 'dark');
 
 document.getElementById('themeToggle').addEventListener('click', () => {
-    applyTheme(
-        htmlEl.getAttribute('data-bs-theme') === 'dark'
-            ? 'light'
-            : 'dark'
-    );
+    applyTheme(htmlEl.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark');
 });
 
-/* Validation */
-
-const fields = [
-    'firstName',
-    'lastName',
-    'email',
-    'phone',
-    'username',
-    'password',
-    'confirmPassword'
-];
+/* ── Validation ── */
+const fields = ['firstName', 'lastName', 'email', 'phone', 'username', 'password', 'confirmPassword'];
 
 function validateField(id) {
     const input = document.getElementById(id);
     const value = input.value.trim();
-
     let valid = true;
 
     if (id === 'email') {
         valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-    }
-    else if (id === 'password') {
+    } else if (id === 'password') {
         valid = value.length >= 8;
-    }
-    else if (id === 'confirmPassword') {
+    } else if (id === 'confirmPassword') {
         valid = value === document.getElementById('password').value.trim();
-    }
-    else {
+    } else {
         valid = value !== '';
     }
 
-    document.getElementById('wrap-' + id)
-        .classList.toggle('field-error', !valid);
-
+    document.getElementById('wrap-' + id).classList.toggle('field-error', !valid);
     return valid;
 }
 
 fields.forEach(id => {
-
-    document.getElementById(id).addEventListener('blur', () => {
-        validateField(id);
-    });
-
+    document.getElementById(id).addEventListener('blur', () => validateField(id));
     document.getElementById(id).addEventListener('input', () => {
-
         const wrapper = document.getElementById('wrap-' + id);
-
-        if (wrapper.classList.contains('field-error')) {
-            validateField(id);
-        }
-
-        if (id === 'password') {
-            validateField('confirmPassword');
-        }
+        if (wrapper.classList.contains('field-error')) validateField(id);
+        if (id === 'password') validateField('confirmPassword');
     });
-
 });
 
-document.getElementById('signupForm').addEventListener('submit', e => {
-
+/* ── Submit → register.php ── */
+document.getElementById('signupForm').addEventListener('submit', async e => {
     e.preventDefault();
 
     const valid = fields.map(validateField).every(Boolean);
-
     if (!valid) return;
 
-    // TODO: POST /api/register
+    const submitBtn = document.getElementById('submitBtn');
+    const serverError = document.getElementById('serverError');
+    const serverErrorMsg = document.getElementById('serverErrorMsg');
 
-    window.location.href = 'signin.html';
+    // Hide any previous server error
+    serverError.style.display = 'none';
+
+    // Show loading state
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Creating account…';
+
+    try {
+        const response = await fetch('register.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                FirstName: document.getElementById('firstName').value.trim(),
+                LastName:  document.getElementById('lastName').value.trim(),
+                Login:     document.getElementById('username').value.trim(),
+                Password:  document.getElementById('password').value.trim()
+                // Note: phone & email not yet stored — add columns to Users table to include them
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.error && data.error !== '') {
+            serverErrorMsg.textContent = data.error;
+            serverError.style.display = 'block';
+            return;
+        }
+
+        // Success — store user info and go to sign-in
+        localStorage.setItem('userId',    data.id);
+        window.location.href = 'signin.html';
+
+    } catch (err) {
+        console.error(err);
+        serverErrorMsg.textContent = 'Could not reach the server. Please try again.';
+        serverError.style.display = 'block';
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="bi bi-person-plus me-1"></i> Create Account';
+    }
 });
 </script>
 

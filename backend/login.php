@@ -5,7 +5,7 @@
 	$inData = getRequestInfo();
 
     // user does not connect directly to database, so use line below
-	$conn = new mysqli("206.81.15.115", "alvcm", "ILoveCOP4331C", "Tables_in_COP4331"); // API connects to database using this
+	$conn = new mysqli("localhost", "admin", "adminCOP", "COP4331"); // API connects to database using this
 	if( $conn->connect_error )
 	{
 		returnWithError( $conn->connect_error );

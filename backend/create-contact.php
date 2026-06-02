@@ -1,31 +1,46 @@
 <?php
-// DO NOT USE YET !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 require_once 'utils.php';
 
 $inData = getRequestInfo();
 
-$conn = new mysqli("206.81.15.115", "TheBeast", "WeLoveCOP4331", "Tables_in_COP4331"); // API connects to database
-if( $conn->connect_error ) // if connection fails, return an error
-{
-	returnWithError( $conn->connect_error );
-}
-else
-{
-	$stmt = $conn->prepare("INSERT INTO Contacts (FirstName, LastName, Phone, Email) VALUES (?,?,?,?,?)");
-	$stmt->bind_param("ssss", $inData["FirstName"], $inData["LastName"], $inData["Phone"], $inData["Email"]);
-	$stmt->execute();
-
-	if( $stmt->affected_rows > 0 )
-	{
-		returnWithInfo( '{"id":' . $stmt->insert_id . ',"error":""}' );
-	}
-	else
-	{
-		returnWithError("Failed to create contact");
-	}
-
-	$stmt->close();
-	$conn->close();
+// ── Validate ──────────────────────────────────────────────────────────────────
+if (
+    empty($inData['firstName']) ||
+    empty($inData['lastName'])  ||
+    empty($inData['phone'])     ||
+    empty($inData['email'])
+) {
+    returnWithError('All contact fields are required.');
+    exit;
 }
 
-?>
+// ── Connect ───────────────────────────────────────────────────────────────────
+$conn = new mysqli('localhost', 'admin', 'adminCOP', 'COP4331');
+if ($conn->connect_error) {
+    returnWithError('Database connection failed: ' . $conn->connect_error);
+    exit;
+}
+
+// ── Insert ────────────────────────────────────────────────────────────────────
+// FIX: was (?,?,?,?,?) — 5 placeholders for 4 columns. Now correctly 4.
+$stmt = $conn->prepare(
+    'INSERT INTO Contacts (FirstName, LastName, Phone, Email) VALUES (?, ?, ?, ?)'
+);
+$stmt->bind_param(
+    'ssss',
+    $inData['firstName'],
+    $inData['lastName'],
+    $inData['phone'],
+    $inData['email']
+);
+$stmt->execute();
+
+if ($stmt->affected_rows > 0) {
+    sendResultInfoAsJson(['id' => (int)$stmt->insert_id, 'error' => '']);
+} else {
+    returnWithError('Failed to create contact.');
+}
+
+$stmt->close();
+$conn->close();

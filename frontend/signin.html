@@ -66,13 +66,11 @@
             border: 1px solid #c9d9f5;
         }
 
-        .form-control,
-        .input-group-text {
+        .form-control {
             border-radius: 10px;
         }
 
-        [data-bs-theme="dark"] .form-control,
-        [data-bs-theme="dark"] .input-group-text {
+        [data-bs-theme="dark"] .form-control {
             background: #0d1b2e;
             border-color: #1e3a6e;
             color: #e8edf5;
@@ -83,10 +81,6 @@
             color: #fff;
             border-color: var(--mc-blue);
             box-shadow: 0 0 0 .2rem rgba(37,99,235,.25);
-        }
-
-        [data-bs-theme="dark"] .form-control::placeholder {
-            color: #7b8ba7;
         }
 
         .btn-primary {
@@ -117,8 +111,10 @@
             opacity: .7;
         }
 
-        #serverError {
+        /* Inline error banner */
+        #errorBanner {
             display: none;
+            border-radius: 8px;
         }
     </style>
 </head>
@@ -153,28 +149,26 @@
                 </p>
             </div>
 
-            <!-- Server-side error banner -->
-            <div id="serverError" class="alert alert-danger py-2 mb-3" role="alert">
-                <i class="bi bi-exclamation-circle me-1"></i>
-                <span id="serverErrorMsg"></span>
-            </div>
+            <!-- Error banner (shown on bad credentials) -->
+            <div id="errorBanner" class="alert alert-danger py-2 mb-3" role="alert"></div>
 
-            <form id="loginForm" novalidate>
+            <form id="loginForm">
 
                 <div class="mb-3">
                     <label for="username" class="form-label required-label">
                         Username
                     </label>
+
                     <div class="input-group">
                         <span class="input-group-text">
                             <i class="bi bi-person"></i>
                         </span>
+
                         <input type="text"
                                class="form-control"
                                id="username"
                                name="username"
                                placeholder="Enter username"
-                               autocomplete="username"
                                required>
                     </div>
                 </div>
@@ -183,21 +177,22 @@
                     <label for="password" class="form-label required-label">
                         Password
                     </label>
+
                     <div class="input-group">
                         <span class="input-group-text">
                             <i class="bi bi-lock"></i>
                         </span>
+
                         <input type="password"
                                class="form-control"
                                id="password"
                                name="password"
                                placeholder="Enter password"
-                               autocomplete="current-password"
                                required>
                     </div>
                 </div>
 
-                <button type="submit" id="submitBtn" class="btn btn-primary w-100">
+                <button type="submit" class="btn btn-primary w-100" id="submitBtn">
                     <i class="bi bi-box-arrow-in-right me-1"></i>
                     Sign In
                 </button>
@@ -205,8 +200,13 @@
             </form>
 
             <div class="text-center mt-4">
-                <span class="text-body-secondary">Don't have an account?</span>
-                <a href="signup.html" class="text-decoration-none fw-semibold">Sign Up</a>
+                <span class="text-body-secondary">
+                    Don't have an account?
+                </span>
+
+                <a href="signup.html" class="text-decoration-none fw-semibold">
+                    Sign Up
+                </a>
             </div>
 
         </div>
@@ -219,7 +219,10 @@
 </footer>
 
 <script>
-/* ── Theme ── */
+// ── API base URL ──────────────────────────────────────────────────────────────
+const API_BASE = 'https://api.cop4331-summer2026-17.xyz';
+
+// ── Theme ─────────────────────────────────────────────────────────────────────
 const htmlEl = document.documentElement;
 
 function applyTheme(theme) {
@@ -232,39 +235,34 @@ function applyTheme(theme) {
 applyTheme(localStorage.getItem('theme') || 'dark');
 
 document.getElementById('themeToggle').addEventListener('click', () => {
-    applyTheme(htmlEl.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark');
+    applyTheme(
+        htmlEl.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark'
+    );
 });
 
-/* ── API Base URL ── */
-const API_BASE = window.location.hostname === 'localhost'
-    ? 'http://206.81.15.115'
-    : 'http://206.81.15.115';
-
-/* ── Submit → login.php ── */
-document.getElementById('loginForm').addEventListener('submit', async function(e) {
+// ── Login form ────────────────────────────────────────────────────────────────
+document.getElementById('loginForm').addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value.trim();
+    const username  = document.getElementById('username').value.trim();
+    const password  = document.getElementById('password').value.trim();
+    const banner    = document.getElementById('errorBanner');
+    const submitBtn = document.getElementById('submitBtn');
 
-    const submitBtn    = document.getElementById('submitBtn');
-    const serverError  = document.getElementById('serverError');
-    const serverErrorMsg = document.getElementById('serverErrorMsg');
-
-    // Hide previous errors
-    serverError.style.display = 'none';
+    banner.style.display = 'none';
 
     if (!username || !password) {
-        serverErrorMsg.textContent = 'Please fill in all fields.';
-        serverError.style.display = 'block';
+        banner.textContent   = 'Please fill in all fields.';
+        banner.style.display = 'block';
         return;
     }
 
-    // Loading state
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Signing in…';
+    // Show a loading state so the user knows something is happening
+    submitBtn.disabled   = true;
+    submitBtn.innerHTML  = '<span class="spinner-border spinner-border-sm me-1"></span>Signing in…';
 
     try {
+        // FIX: point at the DigitalOcean server, NOT a relative /api/ path
         const response = await fetch(`${API_BASE}/login.php`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -273,27 +271,27 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 
         const data = await response.json();
 
-        // login.php returns {"error":"..."} on failure
         if (data.error && data.error !== '') {
-            serverErrorMsg.textContent = data.error;
-            serverError.style.display = 'block';
+            banner.textContent   = data.error;
+            banner.style.display = 'block';
             return;
         }
 
-        // FIX: login.php returns id / firstName / lastName — not token / username
+        // FIX: login.php returns id / firstName / lastName — save those,
+        // not data.token / data.username which don't exist in the response.
         localStorage.setItem('userId',    data.id);
         localStorage.setItem('firstName', data.firstName);
         localStorage.setItem('lastName',  data.lastName);
 
         window.location.href = 'index.html';
 
-    } catch (err) {
-        console.error(err);
-        serverErrorMsg.textContent = 'Could not reach the server. Please try again.';
-        serverError.style.display = 'block';
+    } catch (error) {
+        console.error('Login error:', error);
+        banner.textContent   = 'Could not reach the server. Please try again.';
+        banner.style.display = 'block';
     } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="bi bi-box-arrow-in-right me-1"></i> Sign In';
+        submitBtn.disabled  = false;
+        submitBtn.innerHTML = '<i class="bi bi-box-arrow-in-right me-1"></i>Sign In';
     }
 });
 </script>

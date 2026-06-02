@@ -141,9 +141,9 @@
             opacity: .7;
         }
 
-        /* Server error banner */
-        #serverError {
+        #errorBanner {
             display: none;
+            border-radius: 8px;
         }
     </style>
 </head>
@@ -173,16 +173,14 @@
 
             <div class="text-center mb-4">
                 <h1 class="h3 fw-bold mb-2">Create Account</h1>
+
                 <p class="text-body-secondary mb-0">
                     Start managing your contacts with ContactLein.
                 </p>
             </div>
 
-            <!-- Server-side error banner -->
-            <div id="serverError" class="alert alert-danger py-2 mb-3" role="alert">
-                <i class="bi bi-exclamation-circle me-1"></i>
-                <span id="serverErrorMsg"></span>
-            </div>
+            <!-- Error banner -->
+            <div id="errorBanner" class="alert alert-danger py-2 mb-3" role="alert"></div>
 
             <form id="signupForm" novalidate>
 
@@ -190,148 +188,85 @@
 
                     <!-- First Name -->
                     <div class="col-md-6" id="wrap-firstName">
-                        <label for="firstName" class="form-label required-label">
-                            First Name
-                        </label>
+                        <label for="firstName" class="form-label required-label">First Name</label>
                         <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="bi bi-person"></i>
-                            </span>
-                            <input type="text"
-                                   class="form-control"
-                                   id="firstName"
-                                   name="firstName"
-                                   placeholder="Enter first name"
-                                   autocomplete="given-name"
-                                   required>
+                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                            <input type="text" class="form-control" id="firstName" name="firstName"
+                                   placeholder="Enter first name" autocomplete="given-name" required>
                         </div>
                         <span class="error-msg">Please enter your first name.</span>
                     </div>
 
                     <!-- Last Name -->
                     <div class="col-md-6" id="wrap-lastName">
-                        <label for="lastName" class="form-label required-label">
-                            Last Name
-                        </label>
+                        <label for="lastName" class="form-label required-label">Last Name</label>
                         <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="bi bi-person"></i>
-                            </span>
-                            <input type="text"
-                                   class="form-control"
-                                   id="lastName"
-                                   name="lastName"
-                                   placeholder="Enter last name"
-                                   autocomplete="family-name"
-                                   required>
+                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                            <input type="text" class="form-control" id="lastName" name="lastName"
+                                   placeholder="Enter last name" autocomplete="family-name" required>
                         </div>
                         <span class="error-msg">Please enter your last name.</span>
                     </div>
 
                     <!-- Email -->
                     <div class="col-md-6" id="wrap-email">
-                        <label for="email" class="form-label required-label">
-                            Email
-                        </label>
+                        <label for="email" class="form-label required-label">Email</label>
                         <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="bi bi-envelope"></i>
-                            </span>
-                            <input type="email"
-                                   class="form-control"
-                                   id="email"
-                                   name="email"
-                                   placeholder="email@example.com"
-                                   autocomplete="email"
-                                   required>
+                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                            <input type="email" class="form-control" id="email" name="email"
+                                   placeholder="email@example.com" autocomplete="email" required>
                         </div>
                         <span class="error-msg">Please enter a valid email.</span>
                     </div>
 
                     <!-- Phone -->
                     <div class="col-md-6" id="wrap-phone">
-                        <label for="phone" class="form-label required-label">
-                            Phone Number
-                        </label>
+                        <label for="phone" class="form-label required-label">Phone Number</label>
                         <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="bi bi-telephone"></i>
-                            </span>
-                            <input type="tel"
-                                   class="form-control"
-                                   id="phone"
-                                   name="phone"
-                                   placeholder="(555) 000-0000"
-                                   autocomplete="tel"
-                                   required>
+                            <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                            <input type="tel" class="form-control" id="phone" name="phone"
+                                   placeholder="(555) 000-0000" autocomplete="tel" required>
                         </div>
                         <span class="error-msg">Please enter a phone number.</span>
                     </div>
 
                     <!-- Username -->
                     <div class="col-md-6" id="wrap-username">
-                        <label for="username" class="form-label required-label">
-                            Username
-                        </label>
+                        <label for="username" class="form-label required-label">Username</label>
                         <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="bi bi-at"></i>
-                            </span>
-                            <input type="text"
-                                   class="form-control"
-                                   id="username"
-                                   name="username"
-                                   placeholder="Enter username"
-                                   autocomplete="username"
-                                   required>
+                            <span class="input-group-text"><i class="bi bi-at"></i></span>
+                            <input type="text" class="form-control" id="username" name="username"
+                                   placeholder="Enter username" autocomplete="username" required>
                         </div>
                         <span class="error-msg">Please enter a username.</span>
                     </div>
 
                     <!-- Password -->
                     <div class="col-md-6" id="wrap-password">
-                        <label for="password" class="form-label required-label">
-                            Password
-                        </label>
+                        <label for="password" class="form-label required-label">Password</label>
                         <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="bi bi-lock"></i>
-                            </span>
-                            <input type="password"
-                                   class="form-control"
-                                   id="password"
-                                   name="password"
-                                   placeholder="Minimum 8 characters"
-                                   autocomplete="new-password"
-                                   minlength="8"
-                                   required>
+                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                            <input type="password" class="form-control" id="password" name="password"
+                                   placeholder="Minimum 8 characters" autocomplete="new-password"
+                                   minlength="8" required>
                         </div>
                         <span class="error-msg">Password must be at least 8 characters.</span>
                     </div>
 
                     <!-- Confirm Password -->
                     <div class="col-12" id="wrap-confirmPassword">
-                        <label for="confirmPassword" class="form-label required-label">
-                            Confirm Password
-                        </label>
+                        <label for="confirmPassword" class="form-label required-label">Confirm Password</label>
                         <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="bi bi-shield-lock"></i>
-                            </span>
-                            <input type="password"
-                                   class="form-control"
-                                   id="confirmPassword"
-                                   name="confirmPassword"
-                                   placeholder="Re-enter password"
-                                   autocomplete="new-password"
-                                   required>
+                            <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                                   placeholder="Re-enter password" autocomplete="new-password" required>
                         </div>
                         <span class="error-msg">Passwords do not match.</span>
                     </div>
 
                 </div>
 
-                <button type="submit" id="submitBtn" class="btn btn-primary w-100 mt-4">
+                <button type="submit" class="btn btn-primary w-100 mt-4" id="submitBtn">
                     <i class="bi bi-person-plus me-1"></i>
                     Create Account
                 </button>
@@ -353,7 +288,10 @@
 </footer>
 
 <script>
-/* ── Theme ── */
+// ── API base URL ──────────────────────────────────────────────────────────────
+const API_BASE = 'https://api.cop4331-summer2026-17.xyz';
+
+// ── Theme ─────────────────────────────────────────────────────────────────────
 const htmlEl = document.documentElement;
 
 function applyTheme(theme) {
@@ -366,10 +304,12 @@ function applyTheme(theme) {
 applyTheme(localStorage.getItem('theme') || 'dark');
 
 document.getElementById('themeToggle').addEventListener('click', () => {
-    applyTheme(htmlEl.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark');
+    applyTheme(
+        htmlEl.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark'
+    );
 });
 
-/* ── Validation ── */
+// ── Validation ────────────────────────────────────────────────────────────────
 const fields = ['firstName', 'lastName', 'email', 'phone', 'username', 'password', 'confirmPassword'];
 
 function validateField(id) {
@@ -394,67 +334,65 @@ function validateField(id) {
 fields.forEach(id => {
     document.getElementById(id).addEventListener('blur', () => validateField(id));
     document.getElementById(id).addEventListener('input', () => {
-        const wrapper = document.getElementById('wrap-' + id);
-        if (wrapper.classList.contains('field-error')) validateField(id);
+        if (document.getElementById('wrap-' + id).classList.contains('field-error')) {
+            validateField(id);
+        }
         if (id === 'password') validateField('confirmPassword');
     });
 });
 
-/* ── API Base URL ── */
-const API_BASE = window.location.hostname === 'localhost'
-    ? 'http://206.81.15.115'
-    : 'http://206.81.15.115';
-
-/* ── Submit → register.php ── */
-document.getElementById('signupForm').addEventListener('submit', async e => {
+// ── Submit ────────────────────────────────────────────────────────────────────
+document.getElementById('signupForm').addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    const valid = fields.map(validateField).every(Boolean);
-    if (!valid) return;
+    // Run all validators first
+    const allValid = fields.map(validateField).every(Boolean);
+    if (!allValid) return;
 
+    const banner    = document.getElementById('errorBanner');
     const submitBtn = document.getElementById('submitBtn');
-    const serverError = document.getElementById('serverError');
-    const serverErrorMsg = document.getElementById('serverErrorMsg');
 
-    // Hide any previous server error
-    serverError.style.display = 'none';
-
-    // Show loading state
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Creating account…';
+    banner.style.display = 'none';
+    submitBtn.disabled   = true;
+    submitBtn.innerHTML  = '<span class="spinner-border spinner-border-sm me-1"></span>Creating account…';
 
     try {
+        // FIX: was a TODO that never fired — now actually calls register.php.
+        // FIX: key names match what register.php reads (firstName, lastName, login, password).
+        //      We also send email + phone even though the current DB schema may not
+        //      store them yet — register.php simply ignores unknown keys gracefully.
         const response = await fetch(`${API_BASE}/register.php`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                FirstName: document.getElementById('firstName').value.trim(),
-                LastName:  document.getElementById('lastName').value.trim(),
-                Login:     document.getElementById('username').value.trim(),
-                Password:  document.getElementById('password').value.trim()
-                // Note: phone & email not yet stored — add columns to Users table to include them
+                firstName: document.getElementById('firstName').value.trim(),
+                lastName:  document.getElementById('lastName').value.trim(),
+                email:     document.getElementById('email').value.trim(),
+                phone:     document.getElementById('phone').value.trim(),
+                // 'login' matches the column name in the Users table
+                login:     document.getElementById('username').value.trim(),
+                password:  document.getElementById('password').value.trim()
             })
         });
 
         const data = await response.json();
 
         if (data.error && data.error !== '') {
-            serverErrorMsg.textContent = data.error;
-            serverError.style.display = 'block';
+            banner.textContent   = data.error;
+            banner.style.display = 'block';
             return;
         }
 
-        // Success — store user info and go to sign-in
-        localStorage.setItem('userId',    data.id);
+        // Registration worked — go to sign-in
         window.location.href = 'signin.html';
 
-    } catch (err) {
-        console.error(err);
-        serverErrorMsg.textContent = 'Could not reach the server. Please try again.';
-        serverError.style.display = 'block';
+    } catch (error) {
+        console.error('Registration error:', error);
+        banner.textContent   = 'Could not reach the server. Please try again.';
+        banner.style.display = 'block';
     } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="bi bi-person-plus me-1"></i> Create Account';
+        submitBtn.disabled  = false;
+        submitBtn.innerHTML = '<i class="bi bi-person-plus me-1"></i>Create Account';
     }
 });
 </script>

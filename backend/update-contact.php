@@ -1,49 +1,42 @@
 <?php
 
-    require_once 'utils.php';
+require_once 'utils.php';
 
-    $inData = getRequestInfo();
+$inData = getRequestInfo();
 
-    $contactId = $inData["contactId"] ?? 0;
-    $userId = $inData["userId"] ?? 0;
-    $firstName = $inData["firstName"] ?? "";
-    $lastName = $inData["lastName"] ?? "";
-    $phone = $inData["phone"] ?? "";
-    $email = $inData["email"] ?? "";
+$contactId = $inData['contactId'] ?? 0;
+$userId = $inData['userId'] ?? 0;
+$firstName = $inData['firstName'] ?? '';
+$lastName = $inData['lastName'] ?? '';
+$phone = $inData['phone'] ?? '';
+$email = $inData['email'] ?? '';
 
-    if ($contactId == 0 || $userId == 0 || $firstName == "" || $lastName == "" || $phone == "" || $email == "")
-    {
-        returnWithError("Missing required update fields.");
-        exit();
-    }
+if ($contactId == 0 || $userId == 0 || $firstName == '' || $lastName == '' || $phone == '' || $email == '') {
+    returnWithError('Missing required update fields.');
+    exit;
+}
 
-    $conn = new mysqli('localhost', 'admin', 'adminCOP', 'COP4331');
+$conn = new mysqli('localhost', 'admin', 'adminCOP', 'COP4331');
+if ($conn->connect_error) {
+    returnWithError('Database connection failed: ' . $conn->connect_error);
+    exit;
+}
 
-    if ($conn->connect_error)
-    {
-        returnWithError('Database connection failed: ' . $conn->connect_error);
-        exit();
-    }
+$stmt = $conn->prepare(
+    'UPDATE Contacts
+     SET FirstName = ?, LastName = ?, Phone = ?, Email = ?
+     WHERE ID = ? AND UserID = ?'
+);
 
-    $stmt = $conn->prepare(
-        "UPDATE Contacts
-         SET FirstName = ?, LastName = ?, Phone = ?, Email = ?
-         WHERE ID = ? AND UserID = ?"
-    );
+$stmt->bind_param('ssssii', $firstName, $lastName, $phone, $email, $contactId, $userId);
+$stmt->execute();
 
-    $stmt->bind_param("ssssii", $firstName, $lastName, $phone, $email, $contactId, $userId);
-    $stmt->execute();
+sendResultInfoAsJson([
+    'message' => 'Contact updated',
+    'error' => ''
+]);
 
-    if ($stmt->affected_rows >= 0)
-    {
-        returnWithInfo('{"message":"Contact updated","error":""}');
-    }
-    else
-    {
-        returnWithError("Failed to update contact.");
-    }
-
-    $stmt->close();
-    $conn->close();
+$stmt->close();
+$conn->close();
 
 ?>

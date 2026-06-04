@@ -6,6 +6,7 @@ $inData = getRequestInfo();
 
 // ── Validate ──────────────────────────────────────────────────────────────────
 if (
+    empty($inData['userId'])    ||
     empty($inData['firstName']) ||
     empty($inData['lastName'])  ||
     empty($inData['phone'])     ||
@@ -22,13 +23,13 @@ if ($conn->connect_error) {
     exit;
 }
 
-// ── Insert ────────────────────────────────────────────────────────────────────
-// FIX: was (?,?,?,?,?) — 5 placeholders for 4 columns. Now correctly 4.
+// ── Insert (include UserID so contacts can be retrieved per-user) ─────────────
 $stmt = $conn->prepare(
-    'INSERT INTO Contacts (FirstName, LastName, Phone, Email) VALUES (?, ?, ?, ?)'
+    'INSERT INTO Contacts (UserID, FirstName, LastName, Phone, Email) VALUES (?, ?, ?, ?, ?)'
 );
 $stmt->bind_param(
-    'ssss',
+    'issss',
+    $inData['userId'],
     $inData['firstName'],
     $inData['lastName'],
     $inData['phone'],

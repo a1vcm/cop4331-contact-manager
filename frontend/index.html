@@ -27,10 +27,8 @@
         [data-bs-theme="dark"] body             { background: #0d1117; color: #e8edf5; }
         [data-bs-theme="dark"] .card            { background: #161f2e; border-color: #1e3a6e; }
         [data-bs-theme="dark"] .table           { --bs-table-bg: #161f2e; --bs-table-striped-bg: #1a2d4a; color: #e8edf5; }
-        [data-bs-theme="dark"] .form-control, 
-        [data-bs-theme="dark"] .form-select     { background: #0d1b2e; border-color: #1e3a6e; color: #e8edf5; }
-        [data-bs-theme="dark"] .form-control:focus,
-        [data-bs-theme="dark"] .form-select:focus { background: #0d1b2e; border-color: var(--mc-blue); box-shadow: 0 0 0 0.2rem rgba(37,99,235,.25); color: #e8edf5; }
+        [data-bs-theme="dark"] .form-control    { background: #0d1b2e; border-color: #1e3a6e; color: #e8edf5; }
+        [data-bs-theme="dark"] .form-control:focus { background: #0d1b2e; border-color: var(--mc-blue); box-shadow: 0 0 0 0.2rem rgba(37,99,235,.25); color: #e8edf5; }
         [data-bs-theme="dark"] .form-control::placeholder { color: #4a6fa5; }
         [data-bs-theme="dark"] .input-group-text { background: #0d1b2e; border-color: #1e3a6e; color: #94a3b8; }
 
@@ -68,8 +66,10 @@
         .btn-primary       { background: var(--mc-blue); border-color: var(--mc-blue); }
         .btn-primary:hover { background: #1d4ed8; border-color: #1d4ed8; }
 
+        /* Required field asterisk */
         .required-label::after { content: " *"; color: #ef4444; font-weight: 700; }
 
+        /* Inline validation error */
         .field-error .form-label   { color: #ef4444 !important; }
         .field-error .form-control { border-color: #ef4444 !important; }
         .field-error .error-msg    { display: block !important; color: #ef4444; font-size: .78rem; margin-top: 4px; }
@@ -77,6 +77,7 @@
 
         .page-link { cursor: pointer; }
 
+        /* Spinner overlay for contact table */
         #loadingOverlay {
             display: none; position: absolute; inset: 0;
             background: rgba(13,17,23,.55); border-radius: inherit;
@@ -91,11 +92,6 @@
 
         #themeToggle { width: 36px; height: 36px; padding: 0; display: flex; align-items: center; justify-content: center; }
         #themeToggle i { font-size: 1rem; }
-
-        th.sortable { cursor: pointer; position: relative; select-none: none; }
-        th.sortable:hover { background: rgba(255,255,255,0.05); }
-        th.sortable .sort-icon { margin-left: 4px; font-size: 0.8rem; opacity: 0.4; }
-        th.sortable.active-sort .sort-icon { opacity: 1; color: var(--mc-blue); }
     </style>
 </head>
 
@@ -103,6 +99,7 @@
 <header>
     <nav class="navbar px-3" aria-label="Main navigation">
         <div class="container-fluid align-items-center">
+
             <a class="navbar-brand fw-bold fs-4 mb-0" href="index.html">ContactLein</a>
 
             <form id="searchForm" class="d-flex align-items-center px-3 flex-grow-1"
@@ -130,9 +127,11 @@
                          onerror="this.src='https://ui-avatars.com/api/?name='+encodeURIComponent((localStorage.getItem('firstName')||'U')+' '+(localStorage.getItem('lastName')||''))+('&background=0f2a5e&color=fff&size=46')"/>
                 </a>
             </div>
+
         </div>
     </nav>
 
+    <!-- Profile panel (top-right offcanvas) -->
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasProfile" aria-labelledby="offcanvasProfileLabel">
         <div class="offcanvas-header pb-2">
             <h6 class="offcanvas-title fw-semibold" id="offcanvasProfileLabel">My Profile</h6>
@@ -152,6 +151,8 @@
 </header>
 
 <main class="container mt-4">
+
+    <!-- Add Contact -->
     <section class="card mb-4" aria-labelledby="addContactHeading">
         <div class="card-body">
             <h2 class="card-title h5 mb-3" id="addContactHeading">
@@ -180,8 +181,8 @@
                     <div class="col-sm-6" id="wrap-phoneNumber">
                         <label for="phoneNumber" class="form-label required-label">Phone Number</label>
                         <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber"
-                               placeholder="000-000-0000" autocomplete="tel" maxlength="12">
-                        <span class="error-msg">Please enter a valid 10-digit phone number.</span>
+                               placeholder="(555) 000-0000" autocomplete="tel">
+                        <span class="error-msg">Please enter a phone number.</span>
                     </div>
                     <div class="col-12">
                         <button type="submit" class="btn btn-primary" id="addContactBtn">
@@ -193,24 +194,14 @@
         </div>
     </section>
 
+    <!-- Contact List -->
     <section class="card" aria-labelledby="contactListHeading">
         <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
                 <h2 class="card-title h5 mb-0" id="contactListHeading">
                     <i class="bi bi-people me-2 text-primary"></i>Contact List
                 </h2>
-                
-                <div class="d-flex align-items-center gap-3 flex-wrap">
-                    <div class="d-flex align-items-center gap-2">
-                        <label for="pageSizeSelect" class="small text-body-secondary text-nowrap mb-0">Show:</label>
-                        <select id="pageSizeSelect" class="form-select form-select-sm" style="width: auto;">
-                            <option value="5">5</option>
-                            <option value="10" selected>10</option>
-                            <option value="25">25</option>
-                        </select>
-                    </div>
-                    <span class="text-body-secondary small" id="resultsMeta"></span>
-                </div>
+                <span class="text-body-secondary small" id="resultsMeta"></span>
             </div>
 
             <div class="contact-table-wrapper">
@@ -222,16 +213,17 @@
                     <table class="table table-striped align-middle" id="contactsTable" aria-label="List of contacts">
                         <thead>
                             <tr>
-                                <th scope="col" class="sortable" data-sort="firstName">First Name <i class="sort-icon bi bi-arrow-down-up"></i></th>
-                                <th scope="col" class="sortable" data-sort="lastName">Last Name <i class="sort-icon bi bi-arrow-down-up"></i></th>
-                                <th scope="col" class="sortable" data-sort="email">Email <i class="sort-icon bi bi-arrow-down-up"></i></th>
+                                <th scope="col">First Name</th>
+                                <th scope="col">Last Name</th>
+                                <th scope="col">Email</th>
                                 <th scope="col">Phone</th>
-                                <th scope="col" class="sortable" data-sort="createdAt">Created <i class="sort-icon bi bi-arrow-down-up"></i></th>
+                                <th scope="col">Created</th>
                                 <th scope="col">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="contactsTableBody">
-                            </tbody>
+                            <!-- Populated by renderContacts() -->
+                        </tbody>
                     </table>
                 </div>
 
@@ -260,6 +252,7 @@
     </section>
 </main>
 
+<!-- Edit Contact Modal -->
 <div class="modal fade" id="editContactModal" tabindex="-1" aria-labelledby="editContactModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -270,7 +263,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form aria-label="Edit contact details" id="editContactForm" novalidate>
+                <form aria-label="Edit contact details">
                     <div class="mb-3">
                         <label for="editFirstName" class="form-label">First Name</label>
                         <input type="text" class="form-control" id="editFirstName" autocomplete="given-name">
@@ -285,7 +278,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="editPhoneNumber" class="form-label">Phone Number</label>
-                        <input type="tel" class="form-control" id="editPhoneNumber" autocomplete="tel" maxlength="12">
+                        <input type="tel" class="form-control" id="editPhoneNumber" autocomplete="tel">
                     </div>
                     <div id="editErrorBanner" class="alert alert-danger py-2 d-none" role="alert"></div>
                 </form>
@@ -300,6 +293,7 @@
     </div>
 </div>
 
+<!-- Delete Contact Modal -->
 <div class="modal fade" id="deleteContactModal" tabindex="-1" aria-labelledby="deleteContactModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
@@ -322,6 +316,7 @@
     </div>
 </div>
 
+<!-- Logout Confirm Modal -->
 <div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-labelledby="logoutConfirmLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
@@ -329,7 +324,7 @@
                 <h5 class="modal-title" id="logoutConfirmLabel">Confirm Logout</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="mb-0 modal-body">
+            <div class="modal-body">
                 <p class="mb-0">Are you sure you want to log out?</p>
             </div>
             <div class="modal-footer">
@@ -390,28 +385,6 @@ document.getElementById('themeToggle').addEventListener('click', () => {
 const esc     = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const fmtDate = iso => iso ? new Date(iso).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '—';
 
-// Phone Input Auto-Formatter (Formats strictly to 000-000-0000)
-function formatPhoneInput(element) {
-    element.addEventListener('input', (e) => {
-        let input = e.target.value.replace(/\D/g, ''); // Strip non-digits
-        if (input.length > 10) input = input.substring(0, 10); // Hard cap at 10 digits
-        
-        let formatted = '';
-        if (input.length > 0) {
-            formatted = input.substring(0, 3);
-            if (input.length > 3) {
-                formatted += '-' + input.substring(3, 6);
-            }
-            if (input.length > 6) {
-                formatted += '-' + input.substring(6, 10);
-            }
-        }
-        e.target.value = formatted;
-    });
-}
-formatPhoneInput(document.getElementById('phoneNumber'));
-formatPhoneInput(document.getElementById('editPhoneNumber'));
-
 // ── Toast ─────────────────────────────────────────────────────────────────────
 function showToast(message, type = 'success') {
     const id   = 'toast-' + Date.now();
@@ -431,37 +404,29 @@ function showToast(message, type = 'success') {
     setTimeout(() => document.getElementById(id)?.remove(), 3500);
 }
 
-// ── State Variables for Server-Side Processing ────────────────────────────────
-let PAGE_SIZE = 10;
-let currentPage = 1, currentSearch = '';
-let sortBy = 'firstName', sortOrder = 'ASC';
-let displayedContacts = []; // Store current page rows to allow opening detail edits natively
+// ── Pagination ────────────────────────────────────────────────────────────────
+const PAGE_SIZE = 10;
+let currentPage = 1, currentSearch = '', totalPages = 1;
+// Cache all contacts for the current search so edit can look them up by id
+let cachedContacts = [];
 
-function updatePaginationUI(totalRows) {
-    const totalPages = Math.max(1, Math.ceil(totalRows / PAGE_SIZE));
+function updatePagination(total) {
+    totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
     document.getElementById('currentPageBtn').textContent = currentPage;
     document.getElementById('prevPageItem').classList.toggle('disabled', currentPage <= 1);
     document.getElementById('nextPageItem').classList.toggle('disabled', currentPage >= totalPages);
-    
     document.getElementById('resultsMeta').textContent =
-        `Page ${currentPage} of ${totalPages} · ${totalRows} contact${totalRows !== 1 ? 's' : ''}`;
+        `Page ${currentPage} of ${totalPages} · ${total} contact${total !== 1 ? 's' : ''}`;
 }
 
-// ── Load contacts via search-contacts.php using API execution parameters ───
+// ── Load contacts via search-contacts.php ─────────────────────────────────────
 async function loadContacts(page, search) {
     document.getElementById('loadingOverlay').classList.add('active');
     try {
         const res  = await fetch(`${API_BASE}/search-contacts.php`, {
             method:  'POST',
             headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify({ 
-                userId, 
-                search: search ?? '',
-                page: page,
-                perPage: PAGE_SIZE,
-                sortBy: sortBy,
-                sortOrder: sortOrder
-            })
+            body:    JSON.stringify({ userId, search: search ?? '' })
         });
         const data = await res.json();
 
@@ -471,11 +436,12 @@ async function loadContacts(page, search) {
             return;
         }
 
-        displayedContacts = data.contacts ?? [];
-        // Support API implementations providing dynamic record size or fallbacks gracefully
-        const totalCount = data.totalCount ?? displayedContacts.length; 
-        
-        renderContacts(displayedContacts, totalCount);
+        // search-contacts.php returns ALL matching rows — paginate client-side
+        cachedContacts = data.contacts ?? [];
+        const total    = cachedContacts.length;
+        const start    = (page - 1) * PAGE_SIZE;
+        const pageSlice = cachedContacts.slice(start, start + PAGE_SIZE);
+        renderContacts(pageSlice, total);
 
     } catch (err) {
         console.error('loadContacts error:', err);
@@ -484,7 +450,7 @@ async function loadContacts(page, search) {
     }
 }
 
-function renderContacts(contacts, totalRows) {
+function renderContacts(contacts, total) {
     const tbody = document.getElementById('contactsTableBody');
     const empty = document.getElementById('emptyState');
     document.getElementById('loadingOverlay').classList.remove('active');
@@ -492,7 +458,7 @@ function renderContacts(contacts, totalRows) {
     if (!contacts?.length) {
         tbody.innerHTML = '';
         empty.classList.remove('d-none');
-        updatePaginationUI(0);
+        updatePagination(0);
         return;
     }
     empty.classList.add('d-none');
@@ -516,51 +482,14 @@ function renderContacts(contacts, totalRows) {
                 </button>
             </td>
         </tr>`).join('');
-    updatePaginationUI(totalRows);
+    updatePagination(total);
 }
-
-// ── Sorting Event Listeners ───────────────────────────────────────────────────
-document.querySelectorAll('th.sortable').forEach(th => {
-    th.addEventListener('click', () => {
-        const field = th.getAttribute('data-sort');
-        if (sortBy === field) {
-            sortOrder = sortOrder === 'ASC' ? 'DESC' : 'ASC';
-        } else {
-            sortBy = field;
-            sortOrder = 'ASC';
-        }
-        
-        // Update styling indicator states
-        document.querySelectorAll('th.sortable').forEach(el => {
-            el.classList.remove('active-sort');
-            const icon = el.querySelector('.sort-icon');
-            icon.className = 'sort-icon bi bi-arrow-down-up';
-        });
-        
-        th.classList.add('active-sort');
-        const currentIcon = th.querySelector('.sort-icon');
-        currentIcon.className = `sort-icon bi bi-arrow-${sortOrder === 'ASC' ? 'up' : 'down'}`;
-        
-        currentPage = 1;
-        loadContacts(currentPage, currentSearch);
-    });
-});
-
-// ── Pagination Change Handler ──────────────────────────────────────────────
-document.getElementById('pageSizeSelect').addEventListener('change', (e) => {
-    PAGE_SIZE = parseInt(e.target.value, 10);
-    currentPage = 1;
-    loadContacts(currentPage, currentSearch);
-});
 
 document.getElementById('prevPage').addEventListener('click', () => {
     if (currentPage > 1) loadContacts(--currentPage, currentSearch);
 });
 document.getElementById('nextPage').addEventListener('click', () => {
-    const resultsText = document.getElementById('resultsMeta').textContent;
-    const match = resultsText.match(/Page \d+ of (\d+)/);
-    const maxPages = match ? parseInt(match[1], 10) : 1;
-    if (currentPage < maxPages) loadContacts(++currentPage, currentSearch);
+    if (currentPage < totalPages) loadContacts(++currentPage, currentSearch);
 });
 
 // ── Search ────────────────────────────────────────────────────────────────────
@@ -579,12 +508,7 @@ const addFields = ['firstName', 'lastName', 'email', 'phoneNumber'];
 
 function validateField(id) {
     const val = document.getElementById(id).value.trim();
-    let ok = val !== '';
-    if (id === 'email') {
-        ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
-    } else if (id === 'phoneNumber') {
-        ok = val.replace(/\D/g, '').length === 10;
-    }
+    const ok  = id === 'email' ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) : val !== '';
     document.getElementById('wrap-' + id).classList.toggle('field-error', !ok);
     return ok;
 }
@@ -627,6 +551,7 @@ document.getElementById('addContactForm').addEventListener('submit', async e => 
         showToast('Contact added successfully!', 'success');
         e.target.reset();
         addFields.forEach(id => document.getElementById('wrap-' + id).classList.remove('field-error'));
+        // Refresh the contact list to show the new entry
         loadContacts(currentPage, currentSearch);
 
     } catch (err) {
@@ -638,24 +563,17 @@ document.getElementById('addContactForm').addEventListener('submit', async e => 
     }
 });
 
-// ── Edit modal logic ─────────────────────────────────────────────────────────
+// ── Edit modal: populate fields from cached data, then PUT via update-contact.php ──
 let editingId = null;
 
 function openEditModal(id) {
     editingId = id;
-    const contact = displayedContacts.find(c => c.id === id);
+    const contact = cachedContacts.find(c => c.id === id);
     if (contact) {
         document.getElementById('editFirstName').value  = contact.firstName ?? '';
         document.getElementById('editLastName').value   = contact.lastName  ?? '';
         document.getElementById('editEmail').value      = contact.email     ?? '';
-        
-        // Ensure format formatting passes down cleanly to input view
-        const targetInput = document.getElementById('editPhoneNumber');
-        targetInput.value = contact.phone ?? '';
-        const rawDigits = targetInput.value.replace(/\D/g, '');
-        if (rawDigits.length === 10) {
-            targetInput.value = `${rawDigits.substring(0,3)}-${rawDigits.substring(3,6)}-${rawDigits.substring(6,10)}`;
-        }
+        document.getElementById('editPhoneNumber').value = contact.phone    ?? '';
     }
     document.getElementById('editErrorBanner').classList.add('d-none');
     new bootstrap.Modal(document.getElementById('editContactModal')).show();
@@ -670,16 +588,6 @@ document.getElementById('saveChangesBtn').addEventListener('click', async () => 
 
     if (!firstName || !lastName || !email || !phone) {
         banner.textContent = 'All fields are required.';
-        banner.classList.remove('d-none');
-        return;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        banner.textContent = 'Please enter a valid email address.';
-        banner.classList.remove('d-none');
-        return;
-    }
-    if (phone.replace(/\D/g, '').length !== 10) {
-        banner.textContent = 'Phone number must be a valid 10-digit structure.';
         banner.classList.remove('d-none');
         return;
     }
@@ -717,7 +625,7 @@ document.getElementById('saveChangesBtn').addEventListener('click', async () => 
     }
 });
 
-// ── Delete modal logic ───────────────────────────────────────────────────────
+// ── Delete modal: DELETE via delete-contact.php ───────────────────────────────
 let deletingId = null;
 
 function openDeleteModal(id, name) {
@@ -747,6 +655,10 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', async () =
         }
 
         showToast('Contact deleted.', 'danger');
+        // If we deleted the last item on a non-first page, go back one page
+        if (currentPage > 1 && cachedContacts.length - 1 <= (currentPage - 1) * PAGE_SIZE) {
+            currentPage--;
+        }
         loadContacts(currentPage, currentSearch);
 
     } catch (err) {
